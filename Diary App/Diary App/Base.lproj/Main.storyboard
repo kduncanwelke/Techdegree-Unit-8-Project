@@ -51,12 +51,15 @@
                                                 <rect key="frame" x="77" y="0.0" width="248" height="65"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter title . . ." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oef-vA-dsx">
-                                                        <rect key="frame" x="0.0" y="0.0" width="100" height="65"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="248" height="65"/>
                                                         <nil key="textColor"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                         <textInputTraits key="textInputTraits"/>
                                                     </textField>
                                                 </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="oef-vA-dsx" secondAttribute="trailing" id="Uuc-6W-fcL"/>
+                                                </constraints>
                                             </stackView>
                                         </subviews>
                                         <constraints>
@@ -218,7 +221,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Master" id="Zdf-7t-Un8">
-                        <barButtonItem key="rightBarButtonItem" image="Icn_write" id="6yK-Cp-zgw">
+                        <barButtonItem key="rightBarButtonItem" image="Icn_write-1" id="6yK-Cp-zgw">
                             <inset key="largeContentSizeImageInsets" minX="0.0" minY="-1" maxX="0.0" maxY="0.0"/>
                             <connections>
                                 <action selector="writeButtonPressed:" destination="7bK-jq-Zjz" id="Po5-PU-gg1"/>
@@ -248,7 +251,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Icn_write" width="61" height="43"/>
+        <image name="Icn_write-1" width="47" height="33"/>
         <image name="icn_average" width="25" height="25"/>
         <image name="icn_average_lrg" width="14.5" height="14.5"/>
         <image name="icn_bad" width="25" height="25"/>

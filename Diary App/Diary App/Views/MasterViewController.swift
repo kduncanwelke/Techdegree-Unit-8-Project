@@ -25,31 +25,20 @@ class MasterViewController: UITableViewController {
          let controllers = split.viewControllers
          detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
       }
-      
-      let managedContext = CoreDataManager().managedObjectContext
-      let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "JournalEntry")
-      
-      do {
-         journalEntries = try managedContext.fetch(fetchRequest) as! [JournalEntry]
-      } catch let error as NSError {
-         print("could not fetch, \(error), \(error.userInfo)")
-      }
-      
-      print(journalEntries)
    }
    
    override func viewWillAppear(_ animated: Bool) {
       clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
       super.viewWillAppear(animated)
       
-      /*let managedContext = CoreDataManager(modelName: "JournalEntry").managedObjectContext
-      let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "JournalEntry")
+      let managedContext = CoreDataManager.shared.managedObjectContext
+      let fetchRequest = NSFetchRequest<JournalEntry>(entityName: "JournalEntry")
       
       do {
          journalEntries = try managedContext.fetch(fetchRequest)
       } catch let error as NSError {
          print("could not fetch, \(error), \(error.userInfo)")
-      }*/
+      }
    }
    
    @objc
@@ -65,7 +54,6 @@ class MasterViewController: UITableViewController {
       if segue.identifier == "showDetail" {
          if let indexPath = tableView.indexPathForSelectedRow {
             let entry = journalEntries[indexPath.row]
-            print(journalEntries)
             let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
             controller.detailItem = entry
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
@@ -99,8 +87,17 @@ class MasterViewController: UITableViewController {
    
    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
       if editingStyle == .delete {
-         //objects.remove(at: indexPath.row)
+         journalEntries.remove(at: indexPath.row)
          tableView.deleteRows(at: [indexPath], with: .fade)
+         
+         let managedContext = CoreDataManager.shared.managedObjectContext
+         managedContext.delete(journalEntries[indexPath.row] as JournalEntry)
+         
+         do {
+            try managedContext.save()
+         } catch {
+            print("Failed to save")
+         }
       } else if editingStyle == .insert {
          // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
       }

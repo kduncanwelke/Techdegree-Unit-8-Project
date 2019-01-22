@@ -31,8 +31,6 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         titleTextField.delegate = self
         
         configureView()
-        
-        print(detailItem)
     }
 
     // MARK: Custom functions
@@ -94,12 +92,26 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     }
     
     func saveEntry() {
-        let managedContext = CoreDataManager.shared.managedObjectContext
-        let newEntry = JournalEntry(context: managedContext)
+         let managedContext = CoreDataManager.shared.managedObjectContext
         
-        newEntry.title = titleTextField.text
-        newEntry.entry = journalTextView.text
-        newEntry.timestamp = dateLabel.text
+        guard let selection = detailItem else {
+            let newEntry = JournalEntry(context: managedContext)
+            
+            newEntry.title = titleTextField.text
+            newEntry.entry = journalTextView.text
+            newEntry.timestamp = dateLabel.text
+            
+            do {
+                try managedContext.save()
+            } catch {
+                print("Failed to save")
+            }
+            return
+        }
+        
+        selection.title = titleTextField.text
+        selection.entry = journalTextView.text
+        selection.timestamp = dateLabel.text
         
         do {
             try managedContext.save()
