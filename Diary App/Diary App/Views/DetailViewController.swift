@@ -22,7 +22,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     @IBOutlet weak var locationButton: UIButton!
     @IBOutlet weak var dateLabel: UILabel!
     
-    var detailItem: NSManagedObject?
+    var detailItem: JournalEntry?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,9 +49,9 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
             return
         }
         
-        titleTextField.text = selection.value(forKey: "title") as? String
-        journalTextView.text = selection.value(forKey: "entry") as? String
-        dateLabel.text = selection.value(forKey: "timestamp") as? String
+        titleTextField.text = selection.title
+        journalTextView.text = selection.entry
+        dateLabel.text = selection.timestamp
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -94,13 +94,12 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     }
     
     func saveEntry() {
-        let managedContext = CoreDataManager(modelName: "JournalEntry").managedObjectContext
-        let entity = NSEntityDescription.entity(forEntityName: "JournalEntry", in: managedContext)
-        let newEntry = NSManagedObject(entity: entity!, insertInto: managedContext)
+        let managedContext = CoreDataManager.shared.managedObjectContext
+        let newEntry = JournalEntry(context: managedContext)
         
-        newEntry.setValue(titleTextField.text, forKey: "title")
-        newEntry.setValue(journalTextView.text, forKey: "entry")
-        newEntry.setValue(dateLabel.text, forKey: "timestamp")
+        newEntry.title = titleTextField.text
+        newEntry.entry = journalTextView.text
+        newEntry.timestamp = dateLabel.text
         
         do {
             try managedContext.save()

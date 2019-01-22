@@ -13,7 +13,7 @@ class MasterViewController: UITableViewController {
     
    var detailViewController: DetailViewController? = nil
    
-   var journalEntries: [NSManagedObject] = []
+   var journalEntries: [JournalEntry] = []
    
    
    override func viewDidLoad() {
@@ -25,21 +25,31 @@ class MasterViewController: UITableViewController {
          let controllers = split.viewControllers
          detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
       }
+      
+      let managedContext = CoreDataManager().managedObjectContext
+      let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "JournalEntry")
+      
+      do {
+         journalEntries = try managedContext.fetch(fetchRequest) as! [JournalEntry]
+      } catch let error as NSError {
+         print("could not fetch, \(error), \(error.userInfo)")
+      }
+      
+      print(journalEntries)
    }
    
    override func viewWillAppear(_ animated: Bool) {
       clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
       super.viewWillAppear(animated)
       
-      let managedContext = CoreDataManager(modelName: "JournalEntry").managedObjectContext
+      /*let managedContext = CoreDataManager(modelName: "JournalEntry").managedObjectContext
       let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "JournalEntry")
       
       do {
          journalEntries = try managedContext.fetch(fetchRequest)
-         print(journalEntries[0])
       } catch let error as NSError {
          print("could not fetch, \(error), \(error.userInfo)")
-      }
+      }*/
    }
    
    @objc
@@ -55,9 +65,9 @@ class MasterViewController: UITableViewController {
       if segue.identifier == "showDetail" {
          if let indexPath = tableView.indexPathForSelectedRow {
             let entry = journalEntries[indexPath.row]
-            print(journalEntries[1])
+            print(journalEntries)
             let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-            controller.detailItem? = entry
+            controller.detailItem = entry
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
             controller.navigationItem.leftItemsSupplementBackButton = true
          }
