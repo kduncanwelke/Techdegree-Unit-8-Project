@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreData
+import CoreLocation
 
-class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate {
+class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var badMoodButton: UIButton!
     @IBOutlet weak var okMoodButton: UIButton!
@@ -22,6 +23,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     @IBOutlet weak var locationButton: UIButton!
     @IBOutlet weak var dateLabel: UILabel!
     
+    let locationManager = CLLocationManager()
     var detailItem: JournalEntry?
     
     override func viewDidLoad() {
@@ -31,6 +33,9 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         titleTextField.delegate = self
         
         configureView()
+        
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
     }
 
     // MARK: Custom functions
@@ -50,6 +55,25 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         titleTextField.text = selection.title
         journalTextView.text = selection.entry
         dateLabel.text = selection.timestamp
+        locationButton.setTitle(selection.location ?? "Add location . . .", for: .normal)
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+        
+        return updatedText.count <= 28
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText = textView.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        
+        let changedText = currentText.replacingCharacters(in: stringRange, with: text)
+        
+        return changedText.count <= 300
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -100,6 +124,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
             newEntry.title = titleTextField.text
             newEntry.entry = journalTextView.text
             newEntry.timestamp = dateLabel.text
+            newEntry.location = locationButton.titleLabel?.text
             
             do {
                 try managedContext.save()
@@ -112,6 +137,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         selection.title = titleTextField.text
         selection.entry = journalTextView.text
         selection.timestamp = dateLabel.text
+        selection.location = locationButton.titleLabel?.text
         
         do {
             try managedContext.save()
@@ -156,6 +182,14 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
             showAlert(title: "Missing information", message: "Please enter some text for your journal entry")
         } else {
             performSegue(withIdentifier: "returnAfterSave", sender: Any?.self)
+        }
+    }
+    
+    @IBAction func locationButtonTapped(_ sender: Any) {
+        locationManager.requestLocation()
+        
+        lookUpCurrentLocation { geoLoc in
+            self.locationButton.setTitle(geoLoc?.locality ?? "Unknown", for: .normal)
         }
     }
     
