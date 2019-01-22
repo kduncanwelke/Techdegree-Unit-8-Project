@@ -22,6 +22,8 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     @IBOutlet weak var locationButton: UIButton!
     @IBOutlet weak var dateLabel: UILabel!
     
+    var detailItem: NSManagedObject?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -29,25 +31,27 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         titleTextField.delegate = self
         
         configureView()
+        
+        print(detailItem)
     }
 
-    var detailItem: NSManagedObject? {
-        didSet {
-            // Update the view.
-            configureView()
-        }
-    }
-    
     // MARK: Custom functions
     
     func configureView() {
-        journalTextView.text = "Start typing . . ."
-        journalTextView.textColor = UIColor.lightGray
+        guard let selection = detailItem else {
+            journalTextView.text = "Start typing . . ."
+            journalTextView.textColor = UIColor.lightGray
+            
+            titleTextField.text = "Enter title . . ."
+            titleTextField.textColor = UIColor.darkGray
+            
+            dateLabel.text = setDate()
+            return
+        }
         
-        titleTextField.text = "Enter title . . ."
-        titleTextField.textColor = UIColor.darkGray
-        
-        dateLabel.text = setDate()
+        titleTextField.text = selection.value(forKey: "title") as? String
+        journalTextView.text = selection.value(forKey: "entry") as? String
+        dateLabel.text = selection.value(forKey: "timestamp") as? String
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {

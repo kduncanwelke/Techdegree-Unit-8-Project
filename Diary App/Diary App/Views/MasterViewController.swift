@@ -12,7 +12,6 @@ import CoreData
 class MasterViewController: UITableViewController {
     
    var detailViewController: DetailViewController? = nil
-   var objects = [Any]()
    
    var journalEntries: [NSManagedObject] = []
    
@@ -37,6 +36,7 @@ class MasterViewController: UITableViewController {
       
       do {
          journalEntries = try managedContext.fetch(fetchRequest)
+         print(journalEntries[0])
       } catch let error as NSError {
          print("could not fetch, \(error), \(error.userInfo)")
       }
@@ -44,7 +44,7 @@ class MasterViewController: UITableViewController {
    
    @objc
    func insertNewObject(_ sender: Any) {
-      objects.insert(NSDate(), at: 0)
+      //objects.insert(NSDate(), at: 0)
       let indexPath = IndexPath(row: 0, section: 0)
       tableView.insertRows(at: [indexPath], with: .automatic)
    }
@@ -55,8 +55,9 @@ class MasterViewController: UITableViewController {
       if segue.identifier == "showDetail" {
          if let indexPath = tableView.indexPathForSelectedRow {
             let entry = journalEntries[indexPath.row]
+            print(journalEntries[1])
             let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-            controller.detailItem = entry
+            controller.detailItem? = entry
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
             controller.navigationItem.leftItemsSupplementBackButton = true
          }
@@ -88,7 +89,7 @@ class MasterViewController: UITableViewController {
    
    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
       if editingStyle == .delete {
-         objects.remove(at: indexPath.row)
+         //objects.remove(at: indexPath.row)
          tableView.deleteRows(at: [indexPath], with: .fade)
       } else if editingStyle == .insert {
          // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
