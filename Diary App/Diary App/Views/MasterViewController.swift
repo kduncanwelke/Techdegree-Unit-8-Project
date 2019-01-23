@@ -76,7 +76,8 @@ class MasterViewController: UITableViewController {
       let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
       
       let entry = journalEntries[indexPath.row]
-      cell.textLabel?.text = entry.value(forKeyPath: "title") as? String
+      cell.textLabel?.text = entry.title
+      cell.detailTextLabel?.text = entry.timestamp
       return cell
    }
    

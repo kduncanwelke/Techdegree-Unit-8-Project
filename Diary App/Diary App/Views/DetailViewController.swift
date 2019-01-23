@@ -25,6 +25,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     
     let locationManager = CLLocationManager()
     var detailItem: JournalEntry?
+    var reaction: Reaction?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,56 +57,10 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         journalTextView.text = selection.entry
         dateLabel.text = selection.timestamp
         locationButton.setTitle(selection.location ?? "Add location . . .", for: .normal)
-    }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let currentText = textField.text ?? ""
-        guard let stringRange = Range(range, in: currentText) else { return false }
         
-        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-        
-        return updatedText.count <= 28
+        selectReaction(reactionString: selection.reaction)
     }
     
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let currentText = textView.text ?? ""
-        guard let stringRange = Range(range, in: currentText) else { return false }
-        
-        let changedText = currentText.replacingCharacters(in: stringRange, with: text)
-        
-        return changedText.count <= 300
-    }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == UIColor.lightGray {
-            textView.text = nil
-            textView.textColor = UIColor.black
-        }
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = "Start typing . . ."
-            textView.textColor = UIColor.lightGray
-        }
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        if textField.textColor == UIColor.darkGray {
-            textField.text = nil
-            textField.textColor = UIColor.black
-        }
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        guard let text = textField.text?.isEmpty else { return }
-        if text {
-            textField.text = "Enter title . . ."
-            textField.textColor = UIColor.darkGray
-        } else {
-            return
-        }
-    }
     
     func setDate() -> String {
         let formatter = DateFormatter()
@@ -125,6 +80,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
             newEntry.entry = journalTextView.text
             newEntry.timestamp = dateLabel.text
             newEntry.location = locationButton.titleLabel?.text
+            newEntry.reaction = reaction?.rawValue
             
             do {
                 try managedContext.save()
@@ -136,14 +92,27 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         
         selection.title = titleTextField.text
         selection.entry = journalTextView.text
-        selection.timestamp = dateLabel.text
+        selection.timestamp = setDate()
         selection.location = locationButton.titleLabel?.text
+        selection.reaction = reaction?.rawValue
         
         do {
             try managedContext.save()
         } catch {
             print("Failed to save")
         }
+    }
+    
+    func selectReaction(reactionString: String?) {
+        guard let reaction = reactionString else { return }
+        
+        if reaction == Reaction.bad.rawValue {
+            badMoodButton.isSelected = true
+        } else if reaction == Reaction.ok.rawValue {
+            okMoodButton.isSelected = true
+        } else if reaction == Reaction.good.rawValue {
+            goodMoodButton.isSelected = true
+        } 
     }
     
     // MARK: Navigation
@@ -154,6 +123,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         }
     }
     
+    
     // MARK: Actions
     
     @IBAction func moodButtonTapped(_ sender: UIButton) {
@@ -162,14 +132,20 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
             badMoodButton.isSelected = true
             okMoodButton.isSelected = false
             goodMoodButton.isSelected = false
+            
+            reaction = Reaction.bad
         case 1:
             badMoodButton.isSelected = false
             okMoodButton.isSelected = true
             goodMoodButton.isSelected = false
+            
+            reaction = Reaction.ok
         case 2:
             badMoodButton.isSelected = false
             okMoodButton.isSelected = false
             goodMoodButton.isSelected = true
+            
+            reaction = Reaction.good
         default:
             break
         }

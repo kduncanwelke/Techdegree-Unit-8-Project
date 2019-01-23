@@ -3,11 +3,12 @@
     <entity name="JournalEntry" representedClassName="JournalEntry" codeGenerationType="class">
         <attribute name="entry" attributeType="String" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="reaction" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timestamp" attributeType="String" syncable="YES"/>
         <attribute name="title" attributeType="String" syncable="YES"/>
         <userInfo/>
     </entity>
     <elements>
-        <element name="JournalEntry" positionX="261" positionY="189" width="128" height="105"/>
+        <element name="JournalEntry" positionX="261" positionY="189" width="128" height="120"/>
     </elements>
 </model>

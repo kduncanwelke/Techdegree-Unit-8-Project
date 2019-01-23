@@ -19,6 +19,7 @@ extension UIViewController {
     }
 }
 
+// add location functionality
 extension DetailViewController {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let lat = locations.last?.coordinate.latitude, let long = locations.last?.coordinate.longitude {

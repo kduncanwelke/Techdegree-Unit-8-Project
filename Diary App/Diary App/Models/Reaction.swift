@@ -9,6 +9,8 @@
 import Foundation
 import CoreData
 
-struct Journal {
-    
+enum Reaction: String {
+    case bad = "bad"
+    case ok = "ok"
+    case good = "good"
 }
