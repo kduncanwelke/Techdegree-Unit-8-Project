@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import CoreLocation
 
-class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate {
+class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var badMoodButton: UIButton!
     @IBOutlet weak var okMoodButton: UIButton!
@@ -18,10 +18,12 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var journalTextView: UITextView!
-    @IBOutlet weak var image: UIImageView!
+    @IBOutlet weak var imageButton: UIButton!
     
     @IBOutlet weak var locationButton: UIButton!
     @IBOutlet weak var dateLabel: UILabel!
+    
+    let imagePicker = UIImagePickerController()
     
     let locationManager = CLLocationManager()
     var detailItem: JournalEntry?
@@ -29,9 +31,10 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        // delegates
         journalTextView.delegate = self
         titleTextField.delegate = self
+        imagePicker.delegate = self
         
         configureView()
         
@@ -59,8 +62,11 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         locationButton.setTitle(selection.location ?? "Add location . . .", for: .normal)
         
         selectReaction(reactionString: selection.reaction)
+        
+        guard let data = selection.imageData else { return }
+        imageButton.setBackgroundImage(UIImage(data: data), for: .normal)
+        roundButton()
     }
-    
     
     func setDate() -> String {
         let formatter = DateFormatter()
@@ -82,6 +88,12 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
             newEntry.location = locationButton.titleLabel?.text
             newEntry.reaction = reaction?.rawValue
             
+            if imageButton.backgroundImage(for: .normal) != UIImage(named: "icn_noimage") {
+                let data = imageButton.backgroundImage(for: .normal)?.pngData()
+                guard let imageData = data else { return }
+                newEntry.imageData = imageData as Data
+            }
+            
             do {
                 try managedContext.save()
             } catch {
@@ -95,6 +107,12 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         selection.timestamp = setDate()
         selection.location = locationButton.titleLabel?.text
         selection.reaction = reaction?.rawValue
+        
+        if imageButton.backgroundImage(for: .normal) != UIImage(named: "icn_noimage") {
+            let data = imageButton.backgroundImage(for: .normal)?.pngData()
+            guard let imageData = data else { return }
+            selection.imageData = imageData as Data
+        }
         
         do {
             try managedContext.save()
@@ -112,7 +130,29 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
             okMoodButton.isSelected = true
         } else if reaction == Reaction.good.rawValue {
             goodMoodButton.isSelected = true
-        } 
+        }
+    }
+    
+    func roundButton() {
+        // make image round
+        imageButton.layer.cornerRadius = imageButton.frame.height / 2
+        imageButton.clipsToBounds = true
+    }
+    
+    // image picker functions
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            imageButton.setBackgroundImage(pickedImage, for: .normal)
+            
+            roundButton()
+        }
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
     // MARK: Navigation
@@ -125,6 +165,14 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     
     
     // MARK: Actions
+    
+    @IBAction func imageButtonTapped(_ sender: Any) {
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .photoLibrary
+        
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
     
     @IBAction func moodButtonTapped(_ sender: UIButton) {
         switch sender.tag {

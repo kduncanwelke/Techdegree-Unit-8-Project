@@ -2,6 +2,7 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18C54" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="JournalEntry" representedClassName="JournalEntry" codeGenerationType="class">
         <attribute name="entry" attributeType="String" syncable="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="reaction" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timestamp" attributeType="String" syncable="YES"/>
@@ -9,6 +10,6 @@
         <userInfo/>
     </entity>
     <elements>
-        <element name="JournalEntry" positionX="261" positionY="189" width="128" height="120"/>
+        <element name="JournalEntry" positionX="261" positionY="189" width="128" height="135"/>
     </elements>
 </model>
