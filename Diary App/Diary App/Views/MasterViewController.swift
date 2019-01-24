@@ -15,6 +15,8 @@ class MasterViewController: UITableViewController {
    
    var journalEntries: [JournalEntry] = []
    
+   let searchController = UISearchController(searchResultsController: nil)
+   var searchResults = [JournalEntry]()
    
    override func viewDidLoad() {
       super.viewDidLoad()
@@ -25,6 +27,15 @@ class MasterViewController: UITableViewController {
          let controllers = split.viewControllers
          detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
       }
+      
+      // search setup
+      searchController.searchResultsUpdater = self
+      searchController.obscuresBackgroundDuringPresentation = false
+      searchController.searchBar.placeholder = "Type to search . . ."
+      navigationItem.searchController = searchController
+      definesPresentationContext = true
+      navigationItem.hidesSearchBarWhenScrolling = false
+      
    }
    
    override func viewWillAppear(_ animated: Bool) {
@@ -48,12 +59,35 @@ class MasterViewController: UITableViewController {
       tableView.insertRows(at: [indexPath], with: .automatic)
    }
    
+   // MARK: Search bar configuration
+   func searchBarIsEmpty() -> Bool {
+      return searchController.searchBar.text?.isEmpty ?? true
+   }
+   
+   func filterSearch(_ searchText: String) {
+      searchResults = journalEntries.filter({(journal: JournalEntry) -> Bool in
+         return journal.title!.lowercased().contains(searchText.lowercased()) || journal.entry!.lowercased().contains(searchText.lowercased())
+      })
+      tableView.reloadData()
+   }
+   
+   func isFilteringBySearch() -> Bool {
+      return searchController.isActive && !searchBarIsEmpty()
+   }
+   
+   
    // MARK: - Segues
    
    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
       if segue.identifier == "showDetail" {
          if let indexPath = tableView.indexPathForSelectedRow {
-            let entry = journalEntries[indexPath.row]
+            let entry: JournalEntry
+            if isFilteringBySearch() {
+               entry = searchResults[indexPath.row]
+            } else {
+               entry = journalEntries[indexPath.row]
+            }
+            
             let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
             controller.detailItem = entry
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
@@ -69,13 +103,23 @@ class MasterViewController: UITableViewController {
    }
    
    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return journalEntries.count
+      if isFilteringBySearch() {
+         return searchResults.count
+      } else {
+         return journalEntries.count
+      }
    }
    
    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
       
-      let entry = journalEntries[indexPath.row]
+      let entry: JournalEntry
+      if isFilteringBySearch() {
+         entry = searchResults[indexPath.row]
+      } else {
+         entry = journalEntries[indexPath.row]
+      }
+      
       cell.textLabel?.text = entry.title
       cell.detailTextLabel?.text = entry.timestamp
       return cell
@@ -103,10 +147,11 @@ class MasterViewController: UITableViewController {
          // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
       }
    }
+   
+   // MARK: Actions
     
     @IBAction func writeButtonPressed(_ sender: Any) {
          performSegue(withIdentifier: "showDetail", sender: Any?.self)
     }
     
 }
-

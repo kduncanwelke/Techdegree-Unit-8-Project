@@ -12,6 +12,7 @@
 		2D62EEC021F664880054D3B6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D62EEBF21F664880054D3B6 /* Extensions.swift */; };
 		2D62EEC421F66CA30054D3B6 /* Reaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D62EEC321F66CA30054D3B6 /* Reaction.swift */; };
 		2D6C1FBC21F3C995003EF423 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6C1FBB21F3C995003EF423 /* CoreDataManager.swift */; };
+		2D6F45BE21FA55BD00740814 /* ImageResizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6F45BD21FA55BD00740814 /* ImageResizing.swift */; };
 		2D905EBB21F243B000F54254 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D905EBA21F243B000F54254 /* AppDelegate.swift */; };
 		2D905EBE21F243B100F54254 /* JournalEntry.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D905EBC21F243B100F54254 /* JournalEntry.xcdatamodeld */; };
 		2D905EC021F243B100F54254 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D905EBF21F243B100F54254 /* MasterViewController.swift */; };
@@ -26,6 +27,7 @@
 		2D62EEBF21F664880054D3B6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2D62EEC321F66CA30054D3B6 /* Reaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reaction.swift; sourceTree = "<group>"; };
 		2D6C1FBB21F3C995003EF423 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		2D6F45BD21FA55BD00740814 /* ImageResizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageResizing.swift; sourceTree = "<group>"; };
 		2D905EB721F243B000F54254 /* Diary App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Diary App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D905EBA21F243B000F54254 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2D905EBD21F243B100F54254 /* Diary_App.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Diary_App.xcdatamodel; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				2D62EEC221F664B00054D3B6 /* Views */,
 				2D905EC321F243B100F54254 /* Main.storyboard */,
 				2D62EEBF21F664880054D3B6 /* Extensions.swift */,
+				2D6F45BD21FA55BD00740814 /* ImageResizing.swift */,
 				2D3D707F21F8D0E90011C7BB /* TextFieldViewConfiguration.swift */,
 				2D905EC821F243B200F54254 /* LaunchScreen.storyboard */,
 				2D905ECB21F243B200F54254 /* Info.plist */,
@@ -172,6 +175,7 @@
 				2D3D708021F8D0E90011C7BB /* TextFieldViewConfiguration.swift in Sources */,
 				2D905EBB21F243B000F54254 /* AppDelegate.swift in Sources */,
 				2D62EEC021F664880054D3B6 /* Extensions.swift in Sources */,
+				2D6F45BE21FA55BD00740814 /* ImageResizing.swift in Sources */,
 				2D905EBE21F243B100F54254 /* JournalEntry.xcdatamodeld in Sources */,
 				2D905EC021F243B100F54254 /* MasterViewController.swift in Sources */,
 				2D6C1FBC21F3C995003EF423 /* CoreDataManager.swift in Sources */,

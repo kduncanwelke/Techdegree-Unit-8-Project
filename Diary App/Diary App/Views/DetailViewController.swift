@@ -20,6 +20,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     @IBOutlet weak var journalTextView: UITextView!
     @IBOutlet weak var imageButton: UIButton!
     
+    @IBOutlet weak var usedCharactersLabel: UILabel!
     @IBOutlet weak var locationButton: UIButton!
     @IBOutlet weak var dateLabel: UILabel!
     
@@ -58,6 +59,9 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         
         titleTextField.text = selection.title
         journalTextView.text = selection.entry
+        if let characterCount = selection.entry?.count {
+            usedCharactersLabel.text = "\(characterCount)/300"
+        }
         dateLabel.text = selection.timestamp
         locationButton.setTitle(selection.location ?? "Add location . . .", for: .normal)
         
@@ -143,7 +147,11 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            imageButton.setBackgroundImage(pickedImage, for: .normal)
+            let percentToReduce = (pickedImage.size.width / imageButton.frame.width) / 100
+           
+            let resizedImage = pickedImage.resize(toPercent: percentToReduce)
+            
+            imageButton.setBackgroundImage(resizedImage, for: .normal)
             
             roundButton()
         }

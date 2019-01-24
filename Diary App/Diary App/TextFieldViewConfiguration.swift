@@ -25,6 +25,7 @@ extension DetailViewController {
         
         let changedText = currentText.replacingCharacters(in: stringRange, with: text)
         
+        usedCharactersLabel.text = "\(textView.text.count)/300"
         return changedText.count <= 300
     }
     

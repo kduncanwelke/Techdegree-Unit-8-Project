@@ -19,6 +19,14 @@ extension UIViewController {
     }
 }
 
+// add search function
+extension MasterViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text else { return }
+        filterSearch(searchText)
+    }
+}
+
 // add location functionality
 extension DetailViewController {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
