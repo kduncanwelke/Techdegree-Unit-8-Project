@@ -42,24 +42,24 @@ extension DetailViewController {
     }
     
     func lookUpCurrentLocation(completionHandler: @escaping (CLPlacemark?) -> Void ) {
-        // Use the last reported location.
+        // use the last reported location.
         if let lastLocation = self.locationManager.location {
             let geocoder = CLGeocoder()
             
-            // Look up the location and pass it to the completion handler
+            // look up the location
             geocoder.reverseGeocodeLocation(lastLocation, completionHandler: { (placemarks, error) in
                 if error == nil {
                     let firstLocation = placemarks?[0]
                     completionHandler(firstLocation)
                 }
                 else {
-                    // An error occurred during geocoding.
+                    // an error occurred during geocoding
                     completionHandler(nil)
                 }
             })
         }
         else {
-            // No location was available.
+            // no location was available
             completionHandler(nil)
         }
     }

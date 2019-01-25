@@ -19,6 +19,7 @@
 		2D905EC221F243B100F54254 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D905EC121F243B100F54254 /* DetailViewController.swift */; };
 		2D905EC521F243B100F54254 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D905EC321F243B100F54254 /* Main.storyboard */; };
 		2D905ECA21F243B200F54254 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D905EC821F243B200F54254 /* LaunchScreen.storyboard */; };
+		2DED96D421FA68A5001C9198 /* JournalTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DED96D321FA68A5001C9198 /* JournalTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		2D905EC421F243B100F54254 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2D905EC921F243B200F54254 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D905ECB21F243B200F54254 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2DED96D321FA68A5001C9198 /* JournalTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +51,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2D55608221FBA18D0097A859 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2D62EEBF21F664880054D3B6 /* Extensions.swift */,
+				2D6F45BD21FA55BD00740814 /* ImageResizing.swift */,
+				2D3D707F21F8D0E90011C7BB /* TextFieldViewConfiguration.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		2D62EEC121F6649D0054D3B6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -62,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				2D905EBF21F243B100F54254 /* MasterViewController.swift */,
+				2DED96D321FA68A5001C9198 /* JournalTableViewCell.swift */,
 				2D905EC121F243B100F54254 /* DetailViewController.swift */,
 			);
 			path = Views;
@@ -89,10 +102,8 @@
 				2D905EBA21F243B000F54254 /* AppDelegate.swift */,
 				2D62EEC121F6649D0054D3B6 /* Models */,
 				2D62EEC221F664B00054D3B6 /* Views */,
+				2D55608221FBA18D0097A859 /* Extensions */,
 				2D905EC321F243B100F54254 /* Main.storyboard */,
-				2D62EEBF21F664880054D3B6 /* Extensions.swift */,
-				2D6F45BD21FA55BD00740814 /* ImageResizing.swift */,
-				2D3D707F21F8D0E90011C7BB /* TextFieldViewConfiguration.swift */,
 				2D905EC821F243B200F54254 /* LaunchScreen.storyboard */,
 				2D905ECB21F243B200F54254 /* Info.plist */,
 				2D905EBC21F243B100F54254 /* JournalEntry.xcdatamodeld */,
@@ -179,6 +190,7 @@
 				2D905EBE21F243B100F54254 /* JournalEntry.xcdatamodeld in Sources */,
 				2D905EC021F243B100F54254 /* MasterViewController.swift in Sources */,
 				2D6C1FBC21F3C995003EF423 /* CoreDataManager.swift in Sources */,
+				2DED96D421FA68A5001C9198 /* JournalTableViewCell.swift in Sources */,
 				2D62EEC421F66CA30054D3B6 /* Reaction.swift in Sources */,
 				2D905EC221F243B100F54254 /* DetailViewController.swift in Sources */,
 			);

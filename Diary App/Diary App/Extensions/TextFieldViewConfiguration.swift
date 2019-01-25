@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 extension DetailViewController {
+    // limit title length
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         guard let stringRange = Range(range, in: currentText) else { return false }
@@ -19,6 +20,7 @@ extension DetailViewController {
         return updatedText.count <= 28
     }
     
+    // limit journal entry length
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let currentText = textView.text ?? ""
         guard let stringRange = Range(range, in: currentText) else { return false }
@@ -36,6 +38,7 @@ extension DetailViewController {
         }
     }
     
+    // reassign placeholder if empty
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = "Start typing . . ."
@@ -50,6 +53,7 @@ extension DetailViewController {
         }
     }
     
+    // reassign placeholder if empty
     func textFieldDidEndEditing(_ textField: UITextField) {
         guard let text = textField.text?.isEmpty else { return }
         if text {

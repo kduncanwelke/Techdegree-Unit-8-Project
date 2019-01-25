@@ -12,6 +12,8 @@ import CoreLocation
 
 class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDelegate, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    // MARK: Outlets
+    
     @IBOutlet weak var badMoodButton: UIButton!
     @IBOutlet weak var okMoodButton: UIButton!
     @IBOutlet weak var goodMoodButton: UIButton!
@@ -24,18 +26,23 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     @IBOutlet weak var locationButton: UIButton!
     @IBOutlet weak var dateLabel: UILabel!
     
-    let imagePicker = UIImagePickerController()
     
+    // MARK: Variables
+    
+    let imagePicker = UIImagePickerController()
     let locationManager = CLLocationManager()
     var detailItem: JournalEntry?
     var reaction: Reaction?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // delegates
+        // delegates and setup stuff
         journalTextView.delegate = self
         titleTextField.delegate = self
         imagePicker.delegate = self
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .photoLibrary
         
         configureView()
         
@@ -43,9 +50,11 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         locationManager.requestWhenInUseAuthorization()
     }
 
+    
     // MARK: Custom functions
     
     func configureView() {
+        // if something wasn't selected, show empty fields
         guard let selection = detailItem else {
             journalTextView.text = "Start typing . . ."
             journalTextView.textColor = UIColor.lightGray
@@ -57,6 +66,8 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
             return
         }
         
+        
+        // otherwise populate fields with info form selected entry
         titleTextField.text = selection.title
         journalTextView.text = selection.entry
         if let characterCount = selection.entry?.count {
@@ -81,8 +92,9 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     }
     
     func saveEntry() {
-         let managedContext = CoreDataManager.shared.managedObjectContext
+        let managedContext = CoreDataManager.shared.managedObjectContext
         
+        // save new entry if no item was selected from previous view
         guard let selection = detailItem else {
             let newEntry = JournalEntry(context: managedContext)
             
@@ -106,6 +118,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
             return
         }
         
+        // resave edited item if there was a selection from the previous view
         selection.title = titleTextField.text
         selection.entry = journalTextView.text
         selection.timestamp = setDate()
@@ -125,6 +138,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         }
     }
     
+    // set reaction smilie if selected
     func selectReaction(reactionString: String?) {
         guard let reaction = reactionString else { return }
         
@@ -138,19 +152,21 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     }
     
     func roundButton() {
-        // make image round
+        // make image round and pretty
         imageButton.layer.cornerRadius = imageButton.frame.height / 2
         imageButton.clipsToBounds = true
     }
     
-    // image picker functions
     
+    // MARK: image picker
+    
+    // app does not check for photo permissions as image picker grants permission per individual selected photo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             let percentToReduce = (pickedImage.size.width / imageButton.frame.width) / 100
            
             let resizedImage = pickedImage.resize(toPercent: percentToReduce)
-            
+        
             imageButton.setBackgroundImage(resizedImage, for: .normal)
             
             roundButton()
@@ -162,6 +178,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
+    
     
     // MARK: Navigation
     
@@ -175,14 +192,12 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     // MARK: Actions
     
     @IBAction func imageButtonTapped(_ sender: Any) {
-        imagePicker.allowsEditing = false
-        imagePicker.sourceType = .photoLibrary
-        
         present(imagePicker, animated: true, completion: nil)
     }
     
     
     @IBAction func moodButtonTapped(_ sender: UIButton) {
+        // properly set reaction based on smilie chosen
         switch sender.tag {
         case 0:
             badMoodButton.isSelected = true
@@ -208,8 +223,9 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
+        // check that required fields aren't empty or default placeholder text before save
         if titleTextField.text == nil || titleTextField.text == "Enter title . . ." {
-            showAlert(title: "Missing information", message: "Please enter a title")
+            showAlert(title: "Missing information", message: "Please enter a title for your journal entry")
         } else if journalTextView.text == nil || journalTextView.text == "Start typing . . ." {
             showAlert(title: "Missing information", message: "Please enter some text for your journal entry")
         } else {
@@ -219,7 +235,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     
     @IBAction func locationButtonTapped(_ sender: Any) {
         locationManager.requestLocation()
-        
+        // get location when add location button is tapped
         lookUpCurrentLocation { geoLoc in
             self.locationButton.setTitle(geoLoc?.locality ?? "Unknown", for: .normal)
         }
