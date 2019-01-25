@@ -170,6 +170,7 @@
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" red="0.49019607840000001" green="0.66666666669999997" blue="0.37647058820000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="VUw-jc-0yf" firstAttribute="trailing" secondItem="jsG-hC-Id3" secondAttribute="trailing" constant="26" id="81k-vA-eJV"/>
                             <constraint firstItem="jsG-hC-Id3" firstAttribute="top" secondItem="VUw-jc-0yf" secondAttribute="top" constant="26" id="YAE-YH-q6N"/>
@@ -223,7 +224,9 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="r7i-6Z-zg0">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" red="0.49019607840000001" green="0.66666666669999997" blue="0.37647058820000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="separatorColor" red="0.49019607840000001" green="0.66666666669999997" blue="0.37647058820000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="JournalCell" rowHeight="200" id="WCw-Qf-5nD" customClass="JournalTableViewCell" customModule="Diary_App" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="200"/>
@@ -245,7 +248,7 @@
                                                 <constraint firstAttribute="height" constant="32" id="s4E-q2-y6A"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
-                                            <nil key="textColor"/>
+                                            <color key="textColor" red="0.41960784309999999" green="0.55294117649999996" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Entry text" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bb9-yg-apA">
@@ -288,7 +291,6 @@
                                         <constraint firstItem="Bb9-yg-apA" firstAttribute="leading" secondItem="37f-cq-3Eg" secondAttribute="leading" constant="20" id="zPG-xr-m1p"/>
                                     </constraints>
                                 </tableViewCellContentView>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <outlet property="dateForEntry" destination="r6V-Rv-moD" id="fhY-fk-fgV"/>
                                     <outlet property="entryText" destination="Bb9-yg-apA" id="qlX-ct-1Lc"/>
@@ -348,6 +350,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="6S0-TO-JiA"/>
-        <segue reference="XYQ-hK-wrX"/>
+        <segue reference="tsl-Nk-0bq"/>
     </inferredMetricsTieBreakers>
+    <color key="tintColor" red="0.41960784309999999" green="0.55294117649999996" blue="0.28627450980000002" alpha="1" colorSpace="calibratedRGB"/>
 </document>
