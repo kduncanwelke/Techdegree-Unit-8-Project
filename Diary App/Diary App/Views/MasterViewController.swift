@@ -34,6 +34,14 @@ class MasterViewController: UITableViewController, UISearchControllerDelegate, U
       // Do any additional setup after loading the view, typically from a nib.
       navigationItem.leftBarButtonItem = editButtonItem
       
+      // search setup
+      searchController.delegate = self
+      searchController.searchResultsUpdater = self
+      searchController.obscuresBackgroundDuringPresentation = false
+      searchController.searchBar.placeholder = "Type to search . . ."
+      navigationItem.searchController = searchController
+      navigationItem.hidesSearchBarWhenScrolling = false
+      
       if let split = splitViewController {
          let controllers = split.viewControllers
          detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
@@ -50,14 +58,6 @@ class MasterViewController: UITableViewController, UISearchControllerDelegate, U
             return
          }
       }
-      
-      // search setup
-      searchController.delegate = self
-      searchController.searchResultsUpdater = self
-      searchController.obscuresBackgroundDuringPresentation = false
-      searchController.searchBar.placeholder = "Type to search . . ."
-      navigationItem.searchController = searchController
-      navigationItem.hidesSearchBarWhenScrolling = false
    }
    
    func splitViewController(
