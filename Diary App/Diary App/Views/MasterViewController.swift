@@ -10,7 +10,12 @@ import UIKit
 import CoreData
 import Photos
 
-class MasterViewController: UITableViewController, UISearchControllerDelegate {
+class MasterViewController: UITableViewController, UISearchControllerDelegate, UISplitViewControllerDelegate {
+   
+   // MARK: Outlets
+   
+   @IBOutlet weak var writeEntryButton: UIBarButtonItem!
+   
    
    // MARK: Variables
    
@@ -18,6 +23,10 @@ class MasterViewController: UITableViewController, UISearchControllerDelegate {
    var journalEntries: [JournalEntry] = []
    let searchController = UISearchController(searchResultsController: nil)
    var searchResults = [JournalEntry]()
+   
+   var isIPadView = false
+   
+   private var collapseDetailViewController = true
    
    
    override func viewDidLoad() {
@@ -28,6 +37,18 @@ class MasterViewController: UITableViewController, UISearchControllerDelegate {
       if let split = splitViewController {
          let controllers = split.viewControllers
          detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
+         
+         split.delegate = self
+         
+         // properly show view depending on device
+         if split.displayMode == .primaryHidden {
+            split.preferredDisplayMode = .allVisible
+            // ipad will initially hide primary view and show detail - set to all visible to fix
+            isIPadView = true
+         } else {
+            isIPadView = false
+            return
+         }
       }
       
       // search setup
@@ -37,6 +58,14 @@ class MasterViewController: UITableViewController, UISearchControllerDelegate {
       searchController.searchBar.placeholder = "Type to search . . ."
       navigationItem.searchController = searchController
       navigationItem.hidesSearchBarWhenScrolling = false
+   }
+   
+   func splitViewController(
+      _ splitViewController: UISplitViewController,
+      collapseSecondary secondaryViewController: UIViewController,
+      onto primaryViewController: UIViewController) -> Bool {
+      // Return true to prevent UIKit from applying its default behavior
+      return true
    }
    
    // fetch data to prepare for display
@@ -91,6 +120,8 @@ class MasterViewController: UITableViewController, UISearchControllerDelegate {
       if segue.identifier == "showDetail" {
          if let indexPath = tableView.indexPathForSelectedRow {
             let entry: JournalEntry
+            
+            // check if items are being filtered or not, and use appropriate array
             if isFilteringBySearch() {
                entry = searchResults[indexPath.row]
             } else {
@@ -123,6 +154,8 @@ class MasterViewController: UITableViewController, UISearchControllerDelegate {
    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       let cell = tableView.dequeueReusableCell(withIdentifier: "JournalCell", for: indexPath) as! JournalTableViewCell
       let entry: JournalEntry
+      
+      // check if items are being filtered or not, and use appropriate array
       if isFilteringBySearch() {
          entry = searchResults[indexPath.row]
       } else {
@@ -137,6 +170,7 @@ class MasterViewController: UITableViewController, UISearchControllerDelegate {
       } else {
          cell.imageForEntry.image = UIImage(named: "icn_noimage") // return placeholder if no image
       }
+      
       if let reaction = entry.reaction {
          cell.smilieImage.isHidden = false
          if reaction == Reaction.bad.rawValue {
@@ -149,7 +183,6 @@ class MasterViewController: UITableViewController, UISearchControllerDelegate {
       } else {
          cell.smilieImage.isHidden = true
       }
-      
       
       cell.imageForEntry.layer.cornerRadius = cell.imageForEntry.frame.height / 2
       cell.imageForEntry.clipsToBounds = true
@@ -200,7 +233,17 @@ class MasterViewController: UITableViewController, UISearchControllerDelegate {
    // MARK: Actions
     
     @IBAction func writeButtonPressed(_ sender: Any) {
+      if isIPadView == false {
          performSegue(withIdentifier: "showDetail", sender: Any?.self)
+      } else {
+         // if iPad view, set sent item to nil and reload
+         if let split = splitViewController {
+            let controllers = split.viewControllers
+            detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
+            detailViewController?.detailItem = nil
+            detailViewController?.configureView()
+         }
+      }
     }
     
 }

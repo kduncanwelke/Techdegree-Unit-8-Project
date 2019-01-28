@@ -34,7 +34,6 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     var detailItem: JournalEntry?
     var reaction: Reaction?
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // delegates and setup stuff
@@ -48,6 +47,15 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
         
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
+        
+        // hide expand view button as use produces undesired results
+        if let split = splitViewController {
+            if !split.isCollapsed {
+                navigationItem.leftBarButtonItem = nil
+            }
+        } else {
+            return
+        }
     }
 
     
@@ -63,11 +71,14 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
             titleTextField.textColor = UIColor.darkGray
             
             dateLabel.text = setDate()
+            imageButton.setBackgroundImage(UIImage(named: "icn_noimage"), for: .normal)
+            badMoodButton.isSelected = false
+            okMoodButton.isSelected = false
+            goodMoodButton.isSelected = false
             return
         }
         
-        
-        // otherwise populate fields with info form selected entry
+        // otherwise populate fields with info from selected entry
         titleTextField.text = selection.title
         journalTextView.text = selection.entry
         if let characterCount = selection.entry?.count {
@@ -223,13 +234,30 @@ class DetailViewController: UIViewController, UITextViewDelegate, UITextFieldDel
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
+       
         // check that required fields aren't empty or default placeholder text before save
         if titleTextField.text == nil || titleTextField.text == "Enter title . . ." {
             showAlert(title: "Missing information", message: "Please enter a title for your journal entry")
         } else if journalTextView.text == nil || journalTextView.text == "Start typing . . ." {
             showAlert(title: "Missing information", message: "Please enter some text for your journal entry")
         } else {
-            performSegue(withIdentifier: "returnAfterSave", sender: Any?.self)
+            if let split = splitViewController {
+                // check for collapse and perform segue if only detail is being shown
+                if split.isCollapsed {
+                    performSegue(withIdentifier: "returnAfterSave", sender: Any?.self)
+                } else {
+                    // otherwise save and reload currently visible master view
+                    if let masterViewController = splitViewController?.primaryViewController {
+                        saveEntry()
+                        masterViewController.viewWillAppear(true)
+                        masterViewController.tableView.reloadData()
+                        print("reloaded")
+                        detailItem = nil
+                        configureView()
+                    }
+                    return
+                }
+            }
         }
     }
     

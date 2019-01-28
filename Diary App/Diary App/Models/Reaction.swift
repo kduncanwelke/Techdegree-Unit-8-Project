@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 
+// reactions used to manage smilies
 enum Reaction: String {
     case bad = "bad"
     case ok = "ok"
